@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robotcanbang_1</name>
+  <version>1.0.0</version>
+  <description>
+    <p>Two-wheeled self-balancing robot with LQR control</p>
+    <p>This package contains URDF model, Gazebo simulation, and LQR balance controller</p>
+  </description>
+  <author>Hoang</author>
+  <maintainer email="hoang@email.com">Hoang</maintainer>
+  <license>BSD</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!-- Core ROS dependencies -->
+  <depend>roslaunch</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf</depend>
+  
+  <!-- Robot description -->
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher_gui</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+  
+  <!-- Visualization -->
+  <depend>rviz</depend>
+  
+  <!-- Gazebo simulation -->
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_ros_control</depend>
+  
+  <!-- Controllers -->
+  <depend>controller_manager</depend>
+  <depend>joint_state_controller</depend>
+  <depend>velocity_controllers</depend>
+  
+  <export>
+    <architecture_independent/>
+    <gazebo_ros gazebo_model_path="${prefix}"/>
+  </export>
+</package>
