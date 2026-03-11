@@ -1,0 +1,48 @@
+<launch>
+  <!-- ============== GAZEBO SIMULATION ============== -->
+  
+  <!-- Start Gazebo with empty world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Load robot description -->
+  <param name="robot_description" 
+         command="cat $(find robotcanbang_1)/urdf/robotcanbang_1.urdf"/>
+
+  <!-- Spawn robot in Gazebo - upright position, close to ground -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model robotcanbang 
+              -x 0 -y 0 -z 0.01 
+              -R 0 -P 0.0 -Y 0"
+        output="screen"/>
+
+  <!-- ============== ROS CONTROLLERS ============== -->
+  
+  <!-- Load controller configurations -->
+  <rosparam file="$(find robotcanbang_1)/config/controllers.yaml" command="load"/>
+
+  <!-- Spawn controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        respawn="false" output="screen"
+        args="joint_state_controller 
+              right_wheel_velocity_controller 
+              left_wheel_velocity_controller"/>
+
+  <!-- Robot state publisher for TF -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" 
+        type="robot_state_publisher" output="screen"/>
+
+  <!-- ============== LQR BALANCE CONTROLLER ============== -->
+  
+  <!-- Wait for Gazebo to start, then run LQR controller -->
+  <node name="lqr_balance_controller" 
+        pkg="robotcanbang_1" 
+        type="lqr_balance_controller.py"
+        output="screen"
+        launch-prefix="bash -c 'sleep 5; $0 $@'"/>
+
+</launch>
